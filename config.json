@@ -1,0 +1,51 @@
+{
+  "input_image": "images/25686.jpg",
+  "target_size_m": 1.0,
+  "min_area_px": 100,
+  "morph_open": 3,
+  "morph_close": 3,
+  "invert_image": false,
+
+  "line_width": 0.02,
+  "num_perimeters": 2,
+  "line_spacing": 0.05,
+
+  "infill_type": "zigzag",
+  "infill_angle": 45.0,
+  "infill_density": 0.8,
+
+  "num_drones": 1,
+  "drone_color": "black",
+  "drawing_height": 1.0,
+  "transit_height": 1.3,
+  "drawing_speed": 0.5,
+
+  "output_dir": "./",
+  "output_prefix": "trajectory.txt",
+
+  "_comments": {
+    "input_image": "Путь к входному изображению (PNG, JPG)",
+    "target_size_m": "Размер наибольшей стороны изображения в метрах",
+    "min_area_px": "Минимальная площадь контура в пикселях для обработки",
+    "morph_open": "Размер ядра морфологического открытия (убирает шум)",
+    "morph_close": "Размер ядра морфологического закрытия (заполняет пропуски)",
+    "invert_image": "Инвертировать изображение (true если рисунок черный на белом)",
+
+    "line_width": "Ширина линии рисования в метрах",
+    "num_perimeters": "Количество периметров (контуров)",
+    "line_spacing": "Расстояние между линиями заполнения в метрах",
+
+    "infill_type": "Тип заполнения: lines, zigzag, grid, triangular, concentric, hilbert, octagram",
+    "infill_angle": "Угол поворота линий заполнения в градусах",
+    "infill_density": "Плотность заполнения от 0.0 до 1.0",
+
+    "num_drones": "Количество дронов (пока поддерживается только 1)",
+    "drone_color": "Цвет краски: black, red, blue, green, yellow, purple, orange, white",
+    "drawing_height": "Высота рисования в метрах",
+    "transit_height": "Высота перемещения в метрах",
+    "drawing_speed": "Скорость рисования в м/с",
+
+    "output_dir": "Директория для выходных файлов",
+    "output_prefix": "Префикс для имен выходных файлов"
+  }
+}
