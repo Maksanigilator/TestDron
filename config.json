@@ -1,7 +1,7 @@
 {
-  "input_image": "images/images-2.png",
+  "input_image": "images/img.png",
   "output_file": "trajectory.txt",
-  "area_m": 1.0,
+  "area_m": 2.0,
   "spacing_m": 0.05,
   "line_width": 0.02,
   "num_perimeters": 2,
