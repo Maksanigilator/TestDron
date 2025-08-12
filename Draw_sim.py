@@ -105,14 +105,12 @@ class TrajectoryVisualizer:
         ymin = min(ys_all) - pad
         ymax = max(ys_all) + pad
         # Если область очень мала, скорректируем до минимум 2x2 метров (если нужно)
-        """
         if xmax - xmin < 2.0:
             cx = (xmax + xmin) / 2.0
             xmin = cx - 1.0; xmax = cx + 1.0
         if ymax - ymin < 2.0:
             cy = (ymax + ymin) / 2.0
             ymin = cy - 1.0; ymax = cy + 1.0
-        """
         return xmin, xmax, ymin, ymax
 
     def render(self):
@@ -226,8 +224,8 @@ def collect_drones_from_path(path: Path) -> List[DroneTrajectory]:
     return drones
 
 def main():
-    parser = argparse.ArgumentParser(description="Visualize trajectory(ies) from trajectory.txt_drone_01_black.txt")
-    parser.add_argument('input', nargs='?', help="Path to trajectory.txt or directory with .txt files", default="trajectory.txt_drone_01_black.txt")
+    parser = argparse.ArgumentParser(description="Visualize trajectory(ies) from trajectory.txt")
+    parser.add_argument('input', nargs='?', help="Path to trajectory.txt or directory with .txt files", default="trajectory.txt")
     parser.add_argument('--indir', help="alternative: specify directory with many trajectory .txt files")
     parser.add_argument('--outdir', help="output directory", default="viz_output")
     parser.add_argument('--safety', type=float, default=0.30, help="safety radius (m)")
