@@ -479,12 +479,14 @@ def order_segments_nn(segments_pts: List[List[Tuple[float, float]]],
 # -----------------------
 # 8) Экспорт
 # -----------------------
-def write_trajectory(output_path: str, segments_ordered: List[List[Tuple[float, float]]],
-                     z_draw: float, z_transit: float, speed: float = 0.5):
+#def write_trajectory(output_path: str, segments_ordered: List[List[Tuple[float, float]]],
+#                    z_draw: float, z_transit: float, speed: float = 0.5):
+def write_trajectory(output_path: str, segments_ordered: List[List[Tuple[float, float]]], speed: float = 0.5):
+
     """Записывает траекторию в файл"""
     with open(output_path, 'w', encoding='utf-8') as f:
         # Начальная позиция
-        f.write(f"MOVE 0.000000 0.000000 {z_transit:.6f}\n")
+        f.write(f"MOVE 0.000000 0.000000 \n")  # Начальная позиция
 
         for segment in segments_ordered:
             if len(segment) < 2:
@@ -492,22 +494,22 @@ def write_trajectory(output_path: str, segments_ordered: List[List[Tuple[float, 
 
             # Переход к началу сегмента на высоте транзита
             x0, y0 = segment[0]
-            f.write(f"MOVE {x0:.6f} {y0:.6f} {z_transit:.6f}\n")
+            f.write(f"MOVE {x0:.6f} {y0:.6f} \n")
 
             # Опускаемся для рисования (только Z координата)
-            f.write(f"MOVE {x0:.6f} {y0:.6f} {z_draw:.6f}\n")
+            f.write(f"MOVE {x0:.6f} {y0:.6f} \n")
 
             # Рисуем сегмент - первая точка тоже DRAW
             for x, y in segment:
-                f.write(f"DRAW {x:.6f} {y:.6f} {z_draw:.6f}\n")
+                f.write(f"DRAW {x:.6f} {y:.6f}\n")
 
             # Поднимаемся после рисования (только Z координата)
             x_end, y_end = segment[-1]
-            f.write(f"MOVE {x_end:.6f} {y_end:.6f} {z_transit:.6f}\n")
+            f.write(f"MOVE {x_end:.6f} {y_end:.6f}\n")
 
         # Возврат в начальную позицию
-        f.write(f"MOVE 0.000000 0.000000 {z_transit:.6f}\n")
-        f.write(f"MOVE 0.000000 0.000000 0.200000\n")
+        f.write(f"MOVE 0.000000 0.000000\n")
+        f.write(f"MOVE 0.000000 0.000000\n")
 
 
 # -----------------------
@@ -531,8 +533,8 @@ def run_pipeline(config_path: str):
     num_perimeters = int(config.get('num_perimeters', 2))
     infill_type = config.get('infill_type', 'zigzag')
     infill_angle = float(config.get('infill_angle', 0.0))
-    z_draw = float(config.get('z_draw', 1.0))
-    z_transit = float(config.get('z_transit', 1.3))
+    #z_draw = float(config.get('z_draw', 1.0))
+    #z_transit = float(config.get('z_transit', 1.3))
     morph_open = int(config.get('morph_open', 0))
     morph_close = int(config.get('morph_close', 0))
     order_start = tuple(config.get('order_start', [0.0, 0.0]))
@@ -627,7 +629,8 @@ def run_pipeline(config_path: str):
 
     print(f"Запись траектории в {output_file}")
     try:
-        write_trajectory(output_file, ordered, z_draw=z_draw, z_transit=z_transit, speed=speed)
+        #write_trajectory(output_file, ordered, z_draw=z_draw, z_transit=z_transit, speed=speed)
+        write_trajectory(output_file, ordered, speed=speed)
         print(f"Готово. Траектория сохранена в {output_file}")
     except Exception as e:
         print(f"Ошибка записи файла: {e}")

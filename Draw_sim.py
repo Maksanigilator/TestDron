@@ -4,8 +4,9 @@ visualize_trajectory.py
 
 Визуализация траекторий дронов (gif + html slider + кадры).
 Поддерживаемые входные форматы (в одном .txt файле):
-  1) "MODE x y z"  (MODE = MOVE|DRAW)
-  2) "navigate_wait(x=..., y=..., z=..., speed=..., frame_id='...')  #draw"  или без #draw
+  1) "MODE x y"        (MODE = MOVE|DRAW)  <-- компактный формат (без Z)
+  2) "MODE x y z"      (старый формат, всё ещё поддерживается)
+  3) "navigate_wait(x=..., y=..., [, z=...], ...)"  (z опционально)
      - если в строке есть "draw" в комментарии, считается DRAW, иначе MOVE
 
 Запуск:
@@ -30,29 +31,53 @@ import imageio.v2 as imageio
 def parse_trajectory_file(path: Path) -> List[Dict]:
     """
     Возвращает список точек: [{"mode":"DRAW"|"MOVE","x":float,"y":float,"z":float}, ...]
-    Поддерживает два формата (см. docstring).
+    Поддерживает форматы:
+      - "MOVE 1.0 2.0"          (без z, z->0.0)
+      - "DRAW 1.0 2.0 0.8"      (с z)
+      - "navigate_wait(x=1.0, y=2.0, z=0.8, ...)" (z опционально)
+      - "navigate_wait(x=1.0, y=2.0, ... )  #draw"  (комментарий draw -> DRAW)
+    Нераспознанные строки игнорируются.
     """
     points = []
-    nav_re = re.compile(r"x\s*=\s*([-+]?\d*\.?\d+),\s*y\s*=\s*([-+]?\d*\.?\d+),\s*z\s*=\s*([-+]?\d*\.?\d+)")
+    # nav regex: x=..., y=..., optional z=...
+    nav_re = re.compile(
+        r"x\s*=\s*([-+]?\d*\.?\d+)\s*,\s*y\s*=\s*([-+]?\d*\.?\d+)(?:\s*,\s*z\s*=\s*([-+]?\d*\.?\d+))?",
+        flags=re.IGNORECASE
+    )
     with open(path, 'r', encoding='utf-8') as f:
         for raw in f:
             s = raw.strip()
             if not s:
                 continue
             parts = s.split()
-            # Формат "MODE x y z"
-            if len(parts) >= 4 and parts[0].upper() in ("MOVE", "DRAW"):
+            # Формат "MODE x y" или "MODE x y z"
+            if len(parts) >= 3 and parts[0].upper() in ("MOVE", "DRAW"):
                 try:
                     mode = parts[0].upper()
-                    x = float(parts[1]); y = float(parts[2]); z = float(parts[3])
+                    x = float(parts[1]); y = float(parts[2])
+                    z = 0.0
+                    if len(parts) >= 4:
+                        try:
+                            z = float(parts[3])
+                        except:
+                            z = 0.0
                     points.append({"mode": mode, "x": x, "y": y, "z": z})
                     continue
                 except:
                     pass
-            # Формат navigate_wait(...)
+            # Формат navigate_wait(...) с опциональным z
             m = nav_re.search(s)
             if m:
-                x = float(m.group(1)); y = float(m.group(2)); z = float(m.group(3))
+                try:
+                    x = float(m.group(1)); y = float(m.group(2))
+                except:
+                    continue
+                z = 0.0
+                if m.group(3) is not None:
+                    try:
+                        z = float(m.group(3))
+                    except:
+                        z = 0.0
                 mode = "DRAW" if ("draw" in s.lower() or "#draw" in s.lower()) else "MOVE"
                 points.append({"mode": mode, "x": x, "y": y, "z": z})
                 continue
