@@ -1,10 +1,12 @@
 {
-  "input_image": "images/square.png",
+  "input_image": "images/img_3.png",
   "output_file": "trajectory.txt",
-  "area_m": 1.0,
+  "area_m": 0.50,
   "spacing_m": 0.02,
   "line_width": 0.01,
   "num_perimeters": 1,
+  "infill_enabled": false,
+  "single_line_perimeter": true,
   "infill_type": "zigzag",
   "infill_angle": 0.0,
   "morph_open": 1,
@@ -12,16 +14,22 @@
   "speed": 0.5,
   "order_start": [0.0, 0.0],
 
-  "offset_x": 1.0,
-  "offset_z": 1.0,
-  "default_y": 0.0,
+
+  "offset_x": 0.30,
+  "offset_z": 1.20,
+  "default_y": -0.05,
+  "draw_y": -0.05,
+  "move_y": -0.05,
   "dt": 0.1,
-  "max_speed": 0.5,
+  "max_speed": 1.0,
+  "draw_speed": 0.4,
+  "move_speed": 0.50,
   "servo_pin": 21,
   "servo_on": 2000,
   "servo_off": 1000,
   "hold_draw": 2,
   "hold_move": 1,
   "start_from_origin": false,
-  "output_file_flight": "flyght.py"
+  "output_file_flight": "flyght.py",
+  "float_precision": 6
 }
